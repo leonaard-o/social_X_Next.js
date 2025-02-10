@@ -30,6 +30,7 @@ interface PropsType {
   isComment?: boolean;
   postUsername?: string;
   postId?: number;
+ 
 }
 
 const PostForm: React.FC<PropsType> = ({
@@ -37,6 +38,7 @@ const PostForm: React.FC<PropsType> = ({
   isComment,
   postUsername,
   postId,
+ 
 }) => {
   // 🔴 Añade estos nuevos estados para GIFs
   const {

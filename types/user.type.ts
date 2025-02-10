@@ -9,6 +9,9 @@ type UserType = {
     coverImage?: string;
     profileImage?: string;
     comments: CommentType[];
+    posts: PostType[];
+
+
     
     createdAt: Date;
     updatedAt: Date;

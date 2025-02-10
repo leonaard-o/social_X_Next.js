@@ -24,6 +24,7 @@ export async function GET() {
             name: true,
             profileImage: true,
           },
+          
         },
       },
       orderBy: { createdAt: "desc" },

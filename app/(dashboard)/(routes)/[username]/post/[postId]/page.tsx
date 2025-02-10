@@ -37,6 +37,7 @@ const PostView = () => {
         postId={post.id}
         postUsername={post?.user?.username ?? ""}
         isComment
+       
       />
       <CommentFeed comments={post?.comments} />
     </>
