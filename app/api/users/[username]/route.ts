@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prismadb";
 import { NextResponse } from "next/server";
 
-export async function GET(request: Request, context: any): Promise<NextResponse> {
+export async function GET(request: Request, context: any) {
   const { params } = context;
   try {
     const session = await auth();
@@ -67,7 +67,7 @@ export async function GET(request: Request, context: any): Promise<NextResponse>
       status: "success",
       data: { ...existingUser, followersCount },
     });
-  } catch {
+  } catch (error) {
     return NextResponse.json(
       {
         message: "Internal Server Error",
