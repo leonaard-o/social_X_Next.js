@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prismadb";
 
 export async function DELETE(
-  req: Request,
-  { params }: { params: { notificationId: string } }
-) {
+  request: NextRequest,
+  { params }: { params: Record<string, string> }
+): Promise<NextResponse> {
   try {
     // 1. Autenticación
     const session = await auth();
@@ -13,29 +13,28 @@ export async function DELETE(
       return NextResponse.json({ error: "No autenticado" }, { status: 401 });
     }
 
-    // 2. Validar ID de notificación
-    const notificationId = parseInt(params.notificationId);
-    if (isNaN(notificationId)) {
+    // 2. Validar ID
+    const notifId = parseInt(params.notificationId);
+    if (isNaN(notifId)) {
       return NextResponse.json({ error: "ID inválido" }, { status: 400 });
     }
 
-    // 3. Eliminar solo si pertenece al usuario
+    // 3. Eliminar
     await prisma.notification.deleteMany({
       where: {
-        id: notificationId,
-        userId: parseInt(session.user.id) // Verifica propiedad
+        id: notifId,
+        userId: parseInt(session.user.id)
       }
     });
 
     return NextResponse.json(
-      { message: "Notificación eliminada" },
+      { message: "Notificación eliminada" }, 
       { status: 200 }
     );
-
   } catch (error) {
-    console.error("Error eliminando notificación:", error);
+    console.error("Error:", error);
     return NextResponse.json(
-      { error: "Error interno del servidor" },
+      { error: "Error interno" }, 
       { status: 500 }
     );
   }

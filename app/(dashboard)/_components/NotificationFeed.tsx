@@ -53,7 +53,7 @@ const NotificationFeed = () => {
       {notifications.map((notification: NotificationType) => (
         <div
           key={notification.id}
-          onClick={() => router.push(`/${notification?.user?.username}`)}
+          onClick={() => router.push("/" + notification.user.username)}
           className="cursor-pointer flex flex-row w-full items-center justify-between p-6 gap-4 border-b hover:bg-gray-100 dark:hover:bg-gray-800 group"
         >
           <div className="flex items-center gap-4">
