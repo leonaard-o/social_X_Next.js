@@ -1,62 +1,78 @@
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prismadb";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ postId: string }> }
-) {
-  // Esperamos a que se resuelvan los parámetros
-  const { postId } = await params;
-
-  if (!postId) {
-    return NextResponse.json(
-      { message: "Post Id required", status: "error" },
-      { status: 400 }
-    );
-  }
-
+export async function GET(request: Request, context: any) {
+  const { params } = context;
   try {
-    const post = await prisma.post.findUnique({
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { message: "Not authenticated", status: "error" },
+        { status: 401 }
+      );
+    }
+
+    const username = params.username;
+    if (!username) {
+      return NextResponse.json(
+        { message: "Username must be provided", status: "error" },
+        { status: 400 }
+      );
+    }
+
+    const existingUser = await prisma.user.findUnique({
       where: {
-        id: +postId, // Convertimos postId a número
+        username: username,
       },
-      include: {
-        user: {
+      select: {
+        id: true,
+        name: true,
+        username: true,
+        bio: true,
+        email: true,
+        dateOfBirth: true,
+        emailVerified: true,
+        coverImage: true,
+        profileImage: true,
+        createdAt: true,
+        updatedAt: true,
+        followingIds: true,
+        hasNotification: true,
+        //isVerified: true,
+        subscription: {
           select: {
-            id: true,
-            name: true,
-            username: true,
-            email: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
-        comments: {
-          include: {
-            user: true,
-          },
-          orderBy: {
-            createdAt: "desc",
+            plan: true,
           },
         },
       },
     });
-
-    if (!post) {
+    if (!existingUser) {
       return NextResponse.json(
-        { message: "Post not found", status: "error" },
+        { message: "User not found", status: "error" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({
-      status: "success",
-      post,
+    const followersCount = await prisma.user.count({
+      where: {
+        followingIds: {
+          has: existingUser.id,
+        },
+      },
     });
-  } catch (err) {
-    console.error("Error retrieving post:", err);
+
+    return NextResponse.json({
+      message: "User retrieved successfully",
+      status: "success",
+      data: { ...existingUser, followersCount },
+    });
+  } catch (error) {
     return NextResponse.json(
-      { message: "Failed to retrieve data", status: "error" },
+      {
+        message: "Internal Server Error",
+        status: "error",
+      },
       { status: 500 }
     );
   }
