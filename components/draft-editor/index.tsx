@@ -11,7 +11,8 @@ const Editor = dynamic(
   { ssr: false }
 );
 
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+
 
 interface PropsType {
   placeholder: string;
