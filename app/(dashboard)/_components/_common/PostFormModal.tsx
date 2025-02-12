@@ -47,7 +47,7 @@ interface PropsType {
       uploadGif,
       gifUploadedUrls,
       loading: uploadingGif,
-      clearFile: clearGif,
+       clearGif,
    
     } = useTenorGifsCare();
   

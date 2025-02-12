@@ -33,9 +33,9 @@ const useTenorGifsCare = () => {
     }
   }, []);
 
-  const clearFile = useCallback(() => setGifUploadedUrls(null), []);
+  const clearGif = useCallback(() => setGifUploadedUrls(null), []);
 
-  return { uploadGif,gifUploadedUrls, loading, clearFile };
+  return { uploadGif,gifUploadedUrls, loading, clearGif };
 };
 
 export default useTenorGifsCare;

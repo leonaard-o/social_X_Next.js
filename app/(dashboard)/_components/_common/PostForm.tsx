@@ -45,7 +45,8 @@ const PostForm: React.FC<PropsType> = ({
     uploadGif,
     gifUploadedUrls,
     loading: uploadingGif,
-    clearFile: clearGif,
+    
+    clearGif,
   } = useTenorGifsCare();
 
   // 🔴 Función para subir GIFs
